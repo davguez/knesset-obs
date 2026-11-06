@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="KnessetData">
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/921/921490.png">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
   <!-- Open Graph & Twitter Cards (Partage WhatsApp, Twitter, LinkedIn) -->
   <meta property="og:type" content="website">
@@ -96,8 +96,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <div class="h-16 flex items-center justify-between gap-3">
-        <div onclick="switchTab('hub')" class="flex items-center space-x-3 cursor-pointer group select-none">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20 border border-blue-400/30 group-hover:scale-105 transition-transform">
+        <div onclick="switchTab('hub')" class="flex min-w-0 items-center space-x-3 cursor-pointer group select-none">
+          <div class="w-10 h-10 shrink-0 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20 border border-blue-400/30 group-hover:scale-105 transition-transform">
             <span class="text-lg">🏛️</span>
           </div>
           <div>
@@ -109,59 +109,44 @@
                 1996–2026 (30 ans)
               </span>
             </div>
-            <p class="text-[11px] text-slate-400 font-medium">
+            <p class="hidden sm:block text-[11px] text-slate-400 font-medium">
               Archives officielles, modélisation de coalitions & quantification de la gouvernabilité
             </p>
           </div>
         </div>
 
         <div class="flex items-center space-x-2">
-          <button id="pwa-install-btn" class="hidden items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/30 transition-all active:scale-95 no-print">
-            <span>📲</span>
-            <span>Installer l'App</span>
+          <button id="pwa-install-btn" aria-label="Installer l'application" title="Installer l'application" class="hidden items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/30 transition-all active:scale-95 no-print">
+            <span aria-hidden="true">📲</span>
+            <span class="hidden sm:inline">Installer l'App</span>
           </button>
           <button onclick="toggleAllView()" id="btnToggleAll" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all">
             <span>📑</span>
             <span>Rapport Continu</span>
           </button>
-          <button onclick="prepareAndPrint()" class="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-600/30 transition-all active:scale-95">
+          <button onclick="prepareAndPrint()" aria-label="Export PDF" title="Export PDF" class="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-600/30 transition-all active:scale-95">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
             </svg>
-            <span>Export PDF</span>
+            <span class="hidden sm:inline">Export PDF</span>
           </button>
         </div>
       </div>
 
-      <!-- Barre d'onglets principale -->
-      <nav class="flex items-center space-x-1 py-2 border-t border-slate-800/80 overflow-x-auto text-xs font-semibold">
-        <button onclick="switchTab('hub')" id="nav-hub" class="nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-blue-400 bg-blue-950/80 border border-blue-800/70">
-          1. Synthèse Exécutive
-        </button>
-        <button onclick="switchTab('indices')" id="nav-indices" class="nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-amber-300 hover:text-white hover:bg-slate-800">
-          2. Indices Science Po & Gouvernabilité ⭐
-        </button>
-        <button onclick="switchTab('demographie')" id="nav-demographie" class="nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-emerald-300 hover:text-white hover:bg-slate-800">
-          3. Démographie & Projections 2030–2040 📈
-        </button>
-        <button onclick="switchTab('portefeuilles')" id="nav-portefeuilles" class="nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-purple-300 hover:text-white hover:bg-slate-800">
-          4. Coût de Coalition & Portefeuilles 💼
-        </button>
-        <button onclick="switchTab('evolution')" id="nav-evolution" class="nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-slate-300 hover:text-white hover:bg-slate-800">
-          5. Évolution des Blocs (4 vs 7)
-        </button>
-        <button onclick="switchTab('explorer')" id="nav-explorer" class="nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-slate-300 hover:text-white hover:bg-slate-800">
-          6. Hémicycle 120 & Scrutins
-        </button>
-        <button onclick="switchTab('simulator')" id="nav-simulator" class="nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-slate-300 hover:text-white hover:bg-slate-800">
-          7. Simulateur de Coalition (61 s.)
-        </button>
-        <button onclick="switchTab('uchronies')" id="nav-uchronies" class="nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-slate-300 hover:text-white hover:bg-slate-800">
-          8. Uchronies & Scénarios
-        </button>
-        <button onclick="switchTab('methodo')" id="nav-methodo" class="nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-slate-300 hover:text-white hover:bg-slate-800">
-          9. Mécanismes & Règles
-        </button>
+      <!-- Navigation principale -->
+      <nav aria-label="Rubriques de l'observatoire" class="flex items-center gap-3 py-2 border-t border-slate-800/80 text-xs font-semibold">
+        <label for="section-select" class="shrink-0 text-slate-400">Rubrique</label>
+        <select id="section-select" onchange="switchTab(this.value)" class="min-w-0 w-full sm:max-w-md rounded-lg border border-blue-800/70 bg-blue-950/80 px-3 py-2 text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <option value="hub">1. Synthèse Exécutive</option>
+          <option value="indices">2. Indices Science Po & Gouvernabilité ⭐</option>
+          <option value="demographie">3. Démographie & Projections 2030–2040 📈</option>
+          <option value="portefeuilles">4. Coût de Coalition & Portefeuilles 💼</option>
+          <option value="evolution">5. Évolution des Blocs (4 vs 7)</option>
+          <option value="explorer">6. Hémicycle 120 & Scrutins</option>
+          <option value="simulator">7. Simulateur de Coalition (61 s.)</option>
+          <option value="uchronies">8. Uchronies & Scénarios</option>
+          <option value="methodo">9. Mécanismes & Règles</option>
+        </select>
       </nav>
 
     </div>
@@ -2397,14 +2382,9 @@
       const activePane = document.getElementById(`tab-${tabId}`);
       if (activePane) activePane.classList.remove('hidden');
 
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.className = "nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-slate-300 hover:text-white hover:bg-slate-800";
-      });
-
-      const activeNav = document.getElementById(`nav-${tabId}`);
-      if (activeNav) {
-        activeNav.className = "nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-blue-400 bg-blue-950/80 border border-blue-800/70 font-bold";
-      }
+      document.getElementById('section-select').value = tabId;
+      isAllView = false;
+      document.getElementById('btnToggleAll').innerHTML = `<span>📑</span><span>Rapport Continu</span>`;
 
       // Redimensionnement automatique des graphiques lors du démasquage de l'onglet
       setTimeout(() => {
@@ -2627,7 +2607,7 @@
     // -----------------------------------------------------------------
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
+        navigator.serviceWorker.register('./service_worker_pwa.js')
           .then((reg) => console.log('PWA Service Worker actif avec scope :', reg.scope))
           .catch((err) => console.warn('Échec enregistrement Service Worker :', err));
       });
@@ -2648,18 +2628,22 @@
     if (installBtn) {
       installBtn.addEventListener('click', async () => {
         if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          installBtn.classList.add('hidden');
-          installBtn.classList.remove('inline-flex');
-        }
+        const prompt = deferredPrompt;
         deferredPrompt = null;
+        installBtn.classList.add('hidden');
+        installBtn.classList.remove('inline-flex');
+        try {
+          await prompt.prompt();
+          await prompt.userChoice;
+        } catch (err) {
+          console.warn("Impossible de proposer l'installation :", err);
+        }
       });
     }
 
     window.addEventListener('appinstalled', () => {
       console.log('Application Knesset PWA installée avec succès !');
+      deferredPrompt = null;
       if (installBtn) {
         installBtn.classList.add('hidden');
         installBtn.classList.remove('inline-flex');

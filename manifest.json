@@ -1,0 +1,16 @@
+{
+  "name": "Observatoire Politique de la Knesset (1996–2026)",
+  "short_name": "KnessetData",
+  "description": "30 ans d'élections en Israël : scrutins, coalitions, démographie et gouvernabilité",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070d18",
+  "theme_color": "#070d18",
+  "lang": "fr",
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
