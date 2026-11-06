@@ -5,6 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Observatoire Politique de la Knesset (1996–2026) : 30 ans d'élections en Israël</title>
 
+  <!-- PWA & Métadonnées Mobiles -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#070d18">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KnessetData">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/921/921490.png">
+
+  <!-- Open Graph & Twitter Cards (Partage WhatsApp, Twitter, LinkedIn) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Observatoire Politique de la Knesset (1996–2026)">
+  <meta property="og:description" content="30 ans d'élections en Israël : 13 scrutins officiels, simulations de coalitions, hémicycle interactif, démographie 2040 et indices de gouvernabilité.">
+  <meta property="og:image" content="https://placehold.co/1200x630/0f172a/38bdf8?text=Observatoire+Knesset+1996-2026">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Observatoire Politique de la Knesset (1996–2026)">
+  <meta name="twitter:description" content="Plateforme d'analyse parlementaire, arithmétique électorale et projections 2030-2040.">
+  <meta name="twitter:image" content="https://placehold.co/1200x630/0f172a/38bdf8?text=Observatoire+Knesset+1996-2026">
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js -->
@@ -98,6 +116,10 @@
         </div>
 
         <div class="flex items-center space-x-2">
+          <button id="pwa-install-btn" class="hidden items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/30 transition-all active:scale-95 no-print">
+            <span>📲</span>
+            <span>Installer l'App</span>
+          </button>
           <button onclick="toggleAllView()" id="btnToggleAll" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all">
             <span>📑</span>
             <span>Rapport Continu</span>
@@ -2384,6 +2406,14 @@
         activeNav.className = "nav-btn px-3 py-1.5 rounded-lg transition-all whitespace-nowrap text-blue-400 bg-blue-950/80 border border-blue-800/70 font-bold";
       }
 
+      // Redimensionnement automatique des graphiques lors du démasquage de l'onglet
+      setTimeout(() => {
+        if (tabId === 'indices' && indicesChartInstance) indicesChartInstance.resize();
+        if (tabId === 'demographie' && demographicChartInstance) demographicChartInstance.resize();
+        if (tabId === 'portefeuilles' && ministriesChartInstance) ministriesChartInstance.resize();
+        if (tabId === 'evolution' && evolutionChartInstance) evolutionChartInstance.resize();
+      }, 50);
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -2525,12 +2555,6 @@
     // -----------------------------------------------------------------
     let ministriesChartInstance = null;
 
-    const MINISTRIES_DATA = {
-      labels: ["1996 (Netanyahou I)", "1999 (Barak)", "2003 (Sharon II)", "2006 (Olmert)", "2009 (Netanyahou II)", "2013 (Netanyahou III)", "2015 (Netanyahou IV)", "2020 (Bibi-Gantz)", "2021 (Bennett-Lapid)", "2022 (Netanyahou VI)"],
-      ministers: [18, 24, 23, 25, 30, 22, 21, 36, 27, 32],
-      theoryLimit: [18, 18, 18, 18, 18, 18, 18, 18, 18, 18]
-    };
-
     function initMinistriesModule() {
       const canvas = document.getElementById("ministriesChartCanvas");
       if (!canvas) return;
@@ -2538,47 +2562,109 @@
 
       if (ministriesChartInstance) ministriesChartInstance.destroy();
 
+      const labels = ["1996", "1999", "2003", "2006", "2009", "2013", "2015", "2020", "2021", "2022", "2026"];
+      const ministersData = [18, 24, 23, 25, 30, 22, 21, 36, 28, 32, 24];
+      const theoreticalCap = labels.map(() => 18);
+
       ministriesChartInstance = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
-          labels: MINISTRIES_DATA.labels,
+          labels: labels,
           datasets: [
             {
-              label: 'Nombre réel de ministres au cabinet',
-              data: MINISTRIES_DATA.ministers,
-              borderColor: '#a855f7',
-              backgroundColor: 'rgba(168, 85, 247, 0.2)',
-              fill: true,
-              tension: 0.3,
-              borderWidth: 3,
-              pointRadius: 6,
-              pointBackgroundColor: '#c084fc'
+              label: 'Nombre effectif de ministres au cabinet',
+              data: ministersData,
+              backgroundColor: ministersData.map(v => v >= 32 ? '#ef4444' : v > 24 ? '#a855f7' : '#3b82f6'),
+              borderRadius: 6,
+              borderWidth: 1,
+              borderColor: '#1e293b'
             },
             {
-              label: 'Plafond légal initial de 1996 (18 ministres)',
-              data: MINISTRIES_DATA.theoryLimit,
-              borderColor: '#f43f5e',
-              borderDash: [6, 4],
-              fill: false,
+              label: 'Plafond théorique initial (18 ministres)',
+              data: theoreticalCap,
+              type: 'line',
+              borderColor: '#cbd5e1',
+              borderDash: [5, 5],
               borderWidth: 2,
-              pointRadius: 0
+              pointRadius: 0,
+              fill: false
             }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          scales: {
-            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } },
-            y: { min: 10, max: 40, grid: { color: 'rgba(255,255,255,0.08)' }, ticks: { color: '#94a3b8', stepSize: 5 } }
-          },
           plugins: {
-            legend: { position: 'bottom', labels: { color: '#e2e8f0', font: { size: 11, weight: 'bold' } } },
-            tooltip: { backgroundColor: '#0f172a', titleColor: '#ffffff', bodyColor: '#cbd5e1', borderColor: '#334155', borderWidth: 1 }
+            legend: {
+              labels: { color: '#e2e8f0', font: { size: 12, weight: 'bold' } }
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              titleColor: '#ffffff',
+              bodyColor: '#cbd5e1',
+              borderColor: '#334155',
+              borderWidth: 1
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              ticks: { color: '#94a3b8' }
+            },
+            y: {
+              min: 0,
+              max: 40,
+              grid: { color: 'rgba(255,255,255,0.08)' },
+              ticks: { color: '#94a3b8', stepSize: 5 }
+            }
           }
         }
       });
     }
+
+    // -----------------------------------------------------------------
+    // 10. ENREGISTREMENT DU SERVICE WORKER & GESTION PWA
+    // -----------------------------------------------------------------
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('PWA Service Worker actif avec scope :', reg.scope))
+          .catch((err) => console.warn('Échec enregistrement Service Worker :', err));
+      });
+    }
+
+    let deferredPrompt = null;
+    const installBtn = document.getElementById('pwa-install-btn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (installBtn) {
+        installBtn.classList.remove('hidden');
+        installBtn.classList.add('inline-flex');
+      }
+    });
+
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          installBtn.classList.add('hidden');
+          installBtn.classList.remove('inline-flex');
+        }
+        deferredPrompt = null;
+      });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      console.log('Application Knesset PWA installée avec succès !');
+      if (installBtn) {
+        installBtn.classList.add('hidden');
+        installBtn.classList.remove('inline-flex');
+      }
+    });
   </script>
 </body>
 </html>
